@@ -19,7 +19,6 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1.6.0
         with:
-          tag-edge: true
           images: estragonthecat/test-gha # list of Docker images to use as base name for tags
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
