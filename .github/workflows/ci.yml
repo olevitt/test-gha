@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Docker meta
         id: docker_meta
-        uses: crazy-max/ghaction-docker-meta@v1
+        uses: crazy-max/ghaction-docker-meta@v1.6.0
         with:
           images: estragonthecat/test-gha # list of Docker images to use as base name for tags
       - name: Set up QEMU
