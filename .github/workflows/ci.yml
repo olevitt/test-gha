@@ -1,12 +1,25 @@
 name: Dockerize
 
-on: [push]
+on:
+  #schedule:
+  #- cron: "0 10 * * *" # everyday at 10am
+  push:
+    branches:
+      - "**"
+    tags:
+      - "v*"
+  pull_request:
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Docker meta
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v1
+        with:
+          images: estragonthecat/test-gha # list of Docker images to use as base name for tags
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -17,9 +30,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
-        uses: docker/build-action@v2
+        uses: docker/build-push-action@v2
         with:
           context: .
           file: ./Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
